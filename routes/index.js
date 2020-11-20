@@ -40,6 +40,7 @@ router.post('/sign-up', async function(req,res,next){
       password: SHA256(req.body.passwordFromFront+salt).toString(encBase64),
       token: uid2(32),
       salt: salt,
+      language: 'fr'
     })
   
     saveUser = await newUser.save()
@@ -89,11 +90,28 @@ router.post('/sign-in', async function(req,res,next){
       error.push('email incorrect')
     }
   }
-  
-
   res.json({result, user, error, token})
+})
 
+router.get('/user-lang/:token', async function (req, res, next) {
+  const user = await userModel.findOne({token: req.params.token});
+  var result = false;
+  if (user) {
+    result = true;
+  }
+  res.json({result, lang: user.language})
+})
 
+router.put('/update-lang', async function(req, res, next){
+  const user = await userModel.updateOne(
+    {token: req.body.token},
+    {language: req.body.language}
+    )
+  let result = false;
+  if (user) {
+    result = true;
+  }
+  res.json({result})
 })
 
 module.exports = router;
