@@ -16,31 +16,32 @@ function ScreenArticlesBySource(props) {
 
   useEffect(() => {
     const findArticles = async() => {
-      const data = await fetch(`https://newsapi.org/v2/top-headlines?sources=${props.match.params.id}&apiKey=d0c88d9b3d894b5c8d3cfc42054ba0ef`)
-      const body = await data.json()
-      console.log(body)
-      setArticleList(body.articles) 
-    }
+      const data = await fetch(`https://newsapi.org/v2/top-headlines?sources=${props.match.params.id}&apiKey=d0c88d9b3d894b5c8d3cfc42054ba0ef`);
+      const body = await data.json();
+      // console.log(body)
+      setArticleList(body.articles);
+    };
 
     findArticles()    
   },[])
 
   var showModal = (title, content) => {
-    setVisible(true)
-    setTitle(title)
-    setContent(content)
+    setVisible(true);
+    setTitle(title);
+    setContent(content);
 
   }
 
   var handleOk = e => {
-    console.log(e)
-    setVisible(false)
+    setVisible(false);
   }
 
   var handleCancel = e => {
-    console.log(e)
-    setVisible(false)
+    console.log(e);
+    setVisible(false);
   }
+
+  console.log(articleList);
 
   return (
     <div>
@@ -69,7 +70,7 @@ function ScreenArticlesBySource(props) {
                   }
                   actions={[
                       <Icon type="read" key="ellipsis2" onClick={() => showModal(article.title,article.content)} />,
-                      <Icon type="like" key="ellipsis" onClick={()=> {props.addToWishList(article)}} />
+                      <Icon type="like" key="ellipsis" onClick={()=> {props.addToWishList({article, lang: props.selectedLang})}} />
                   ]}
                   >
 
@@ -85,7 +86,7 @@ function ScreenArticlesBySource(props) {
                   onOk={handleOk}
                   onCancel={handleCancel}
                 >
-                  <p>{title}</p>
+                  <p>{content}</p>
                 </Modal>
 
               </div>
@@ -114,7 +115,11 @@ function mapDispatchToProps(dispatch){
   }
 }
 
+function mapStateToProps(state){
+  return {selectedLang: state.selectedLang, token: state.token}
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(ScreenArticlesBySource)

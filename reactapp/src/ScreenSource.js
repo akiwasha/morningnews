@@ -16,9 +16,9 @@ function ScreenSource(props) {
       var langue = 'fr'
       var country = 'fr'
         
-      if(selectedLang == 'en'){
-        var langue = 'en'
-        var country = 'us'
+      if(selectedLang === 'en'){
+        langue = 'en'
+        country = 'us'
       }
       props.changeLang(selectedLang)
       const data = await fetch(`https://newsapi.org/v2/sources?language=${langue}&country=${country}&apiKey=d0c88d9b3d894b5c8d3cfc42054ba0ef`)
@@ -30,10 +30,10 @@ function ScreenSource(props) {
       const data = await fetch(`/user-lang/${props.token}`);
       const body = await data.json();
       var lang = "";
-      if (body.result == true) {
+      if (body.result === true) {
         lang = body.lang;
         setSelectedLang(lang);
-      }
+      };
     }
 
     APIResultsLoading();
@@ -57,8 +57,8 @@ function ScreenSource(props) {
         <Nav/>
        
        <div style={{display:'flex', justifyContent:'center', alignItems:'center'}} className="Banner">
-          <img style={selectedLang=='fr' ? {width:'40px', margin:'10px',cursor:'pointer', borderWidth:'2px', borderStyle:'solid', borderColor:'blue'} : {width:'40px', margin:'10px',cursor:'pointer'}} src='/images/fr.png' onClick={() => {setSelectedLang('fr');updateUserLang('fr')}} />
-          <img style={selectedLang=='en' ? {width:'40px', margin:'10px',cursor:'pointer', borderWidth:'2px', borderStyle:'solid', borderColor:'blue'} : {width:'40px', margin:'10px',cursor:'pointer'}} src='/images/uk.png' onClick={() => {setSelectedLang('en'); updateUserLang('en')}} /> 
+          <img style={selectedLang==='fr' ? {width:'40px', margin:'10px',cursor:'pointer', borderWidth:'2px', borderStyle:'solid', borderColor:'blue'} : {width:'40px', margin:'10px',cursor:'pointer'}} src='/images/fr.png' onClick={() => {setSelectedLang('fr');updateUserLang('fr')}} alt="" />
+          <img style={selectedLang==='en' ? {width:'40px', margin:'10px',cursor:'pointer', borderWidth:'2px', borderStyle:'solid', borderColor:'blue'} : {width:'40px', margin:'10px',cursor:'pointer'}} src='/images/uk.png' onClick={() => {setSelectedLang('en'); updateUserLang('en')}} alt="" /> 
         </div>
 
        <div className="HomeThemes">

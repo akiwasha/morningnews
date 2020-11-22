@@ -11,6 +11,7 @@ function ScreenMyArticles(props) {
   const [visible, setVisible] = useState(false)
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [langFilter, setLangFilter] = useState(props.selectedLang)
 
 
 
@@ -22,7 +23,6 @@ function ScreenMyArticles(props) {
   }
 
   var handleOk = e => {
-    console.log(e)
     setVisible(false)
   }
 
@@ -31,9 +31,17 @@ function ScreenMyArticles(props) {
     setVisible(false)
   }
 
-  var noArticles
-  if(props.myArticles == 0){
+  var noArticles;
+  if(props.myArticles.length === 0){
     noArticles = <div style={{marginTop:"30px"}}>No Articles</div>
+  }
+
+  // console.log(props.myArticles);
+  var myWishList;
+  if (langFilter === 'en'){
+    myWishList = props.myArticles.filter(e => e.lang === 'en');
+  } else {
+    myWishList = props.myArticles.filter(e => e.lang === 'fr');
   }
 
   return (
@@ -41,14 +49,17 @@ function ScreenMyArticles(props) {
          
             <Nav/>
 
-            <div className="Banner"/>
+            <div style={{display:'flex', justifyContent:'center', alignItems:'center'}} className="Banner">
+              <img style={langFilter==='fr' ? {width:'40px', margin:'10px',cursor:'pointer', borderWidth:'2px', borderStyle:'solid', borderColor:'blue'} : {width:'40px', margin:'10px',cursor:'pointer'}} src='/images/fr.png' onClick={() => setLangFilter('fr')} alt="" />
+              <img style={langFilter==='en' ? {width:'40px', margin:'10px',cursor:'pointer', borderWidth:'2px', borderStyle:'solid', borderColor:'blue'} : {width:'40px', margin:'10px',cursor:'pointer'}} src='/images/uk.png' onClick={() => setLangFilter('en')} alt="" /> 
+            </div>
 
             {noArticles}
 
             <div className="Card">
     
 
-            {props.myArticles.map((article,i) => (
+            {myWishList.map((article,i) => (
                 <div key={i} style={{display:'flex',justifyContent:'center'}}>
 
                   <Card
@@ -62,18 +73,18 @@ function ScreenMyArticles(props) {
                     cover={
                     <img
                         alt="example"
-                        src={article.urlToImage}
+                        src={article.article.urlToImage}
                     />
                     }
                     actions={[
-                        <Icon type="read" key="ellipsis2" onClick={() => showModal(article.title,article.content)} />,
-                        <Icon type="delete" key="ellipsis" onClick={() => props.deleteToWishList(article.title)} />
+                        <Icon type="read" key="ellipsis2" onClick={() => showModal(article.article.title,article.article.content)} />,
+                        <Icon type="delete" key="ellipsis" onClick={() => props.deleteToWishList(article.article.title)} />
                     ]}
                     >
 
                     <Meta
-                      title={article.title}
-                      description={article.description}
+                      title={article.article.title}
+                      description={article.article.description}
                     />
 
                   </Card>
@@ -83,7 +94,7 @@ function ScreenMyArticles(props) {
                     onOk={handleOk}
                     onCancel={handleCancel}
                   >
-                    <p>{title}</p>
+                    <p>{content}</p>
                   </Modal>
 
                 </div>
@@ -105,7 +116,7 @@ function ScreenMyArticles(props) {
 }
 
 function mapStateToProps(state){
-  return {myArticles: state.wishList}
+  return {myArticles: state.wishList, selectedLang: state.selectedLang}
 }
 
 function mapDispatchToProps(dispatch){
